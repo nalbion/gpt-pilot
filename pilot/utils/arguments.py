@@ -66,6 +66,9 @@ def get_arguments():
     if 'step' not in arguments:
         arguments['step'] = None
 
+    if 'server' not in arguments:
+        arguments['server'] = False
+
     return arguments
 
 
