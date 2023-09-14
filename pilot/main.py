@@ -1,6 +1,6 @@
 # main.py
 from __future__ import print_function, unicode_literals
-
+import multiprocessing
 import sys
 import traceback
 from dotenv import load_dotenv
@@ -12,6 +12,7 @@ from utils.exit import exit_gpt_pilot
 from logger.logger import logger
 from database.database import database_exists, create_database, tables_exist, create_tables
 from helpers.server import start_server
+
 
 def init():
     # Check if the "euclid" database exists, if not, create it
@@ -30,15 +31,16 @@ def init():
 
 
 if __name__ == "__main__":
+    server = None
     try:
         args = init()
 
         if args['server']:
-            start_server()
-        else:
-            # TODO: get_arguments() still prints "STARTING NEW PROJECT" even though it will not be
-            project = Project(args)
-            project.start()
+            server = multiprocessing.Process(target=start_server)
+            server.start()
+        
+        project = Project(args)
+        project.start()
     except KeyboardInterrupt:
         exit_gpt_pilot()
     except Exception as e:
@@ -47,4 +49,6 @@ if __name__ == "__main__":
         print(colored('--------------------------------------------------', 'red'))
         exit_gpt_pilot()
     finally:
+        if server is not None:
+            server.terminate()
         sys.exit(0)
