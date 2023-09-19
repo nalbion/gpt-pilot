@@ -22,8 +22,6 @@ class GitHubIssues(IssueManagementSystem):
         # self.repo_id = 'nalbion/auto-gpt-action'
         self.owner, self.repo_name = self.repo_id.split('/')
         self.repo = self.g.get_repo(self.repo_id)
-        # self.repo = self.g.get_repo('https://github.com/Pythagora-io/gpt-pilot')
-        # self.repo = self.g.get_repo(project.args['github_repo'])
 
         if self.repo.organization is None:
             self.query_root = f'user(login: "{self.owner}")'
